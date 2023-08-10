@@ -1,18 +1,51 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
 
     const $ = (id) => document.getElementById(id);
 
+    const $div = (cls) => {
+        const el = document.createElement('div');
+        el.setAttribute('class', cls);
+        return el;
+    }
+
+    function msg(side, cls, text) {
+        const el = $div('chat-bubble ' + cls);
+        el.innerText = text;
+        const wrapper = $div('chat ' + side);
+        wrapper.appendChild(el);
+        $('chat').appendChild(wrapper);
+    }
+
+    function assistant(text) {
+        msg('chat-start', 'chat-bubble-accent', text);
+        $('assistant-loading').style.display = 'none';
+        $('prompt').disabled = false;
+        $('prompt').focus();
+    }
+
+    function human(text) {
+        msg('chat-end', 'chat-bubble-warning', text);
+        $('assistant-loading').style.display = 'block';
+        $('prompt').disabled = true;
+    }
+
+    function panic(text) {
+        msg('chat-end', 'chat-bubble-error', text);
+        $('assistant-loading').style.display = 'none';
+        $('prompt').disabled = false;
+        $('prompt').focus();
+    }
+
     // send question to the back-end
-    $('prompt').addEventListener("keydown", function handleKeyInput(event) {
-        if (event.key === "Enter") {
+    $('prompt').addEventListener('keydown', function handleKeyInput(event) {
+        if (event.key === 'Enter') {
             const el = $('prompt');
             const prompt = el.value.trim();
             el.value = '';
             if (prompt.length > 0) {
-                el.disabled = true;
-                appendHumanMessage(prompt);
+                human(prompt);
                 fetch('/question?' + encodeURIComponent(prompt)).catch(error => {
-                    showError(error);
+                    panic(error);
                 }).then(response => {
                     response && response.ok && setTimeout(getAssistantAnswer, 300);
                 })
@@ -24,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let assistantIndex = 0;
     function getAssistantAnswer() {
         fetch('/answer').catch(error => {
-            showError(error);
+            panic(error);
         }).then(response => {
             return response && response.json();
         }).then(data => {
@@ -34,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const { index, answer } = data;
             if (index > assistantIndex) {
                 assistantIndex = index;
-                appendAssistantMessage(answer);
+                assistant(answer);
                 $('prompt').disabled = false;
                 $('prompt').focus();
             } else {
@@ -43,46 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
-    function appendHumanMessage(text) {
-        const msg = document.createElement('div');
-        msg.setAttribute('class', 'chat-bubble chat-bubble-warning');
-        msg.innerText = text;
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('class', 'chat chat-end');
-        wrapper.appendChild(msg);
-        $('chat').appendChild(wrapper);
-        $("assistant-loading").style.visibility = 'visible';
-    }
-
-    function appendAssistantMessage(text) {
-        const msg = document.createElement('div');
-        msg.setAttribute('class', 'chat-bubble chat-bubble-accent');
-        msg.innerText = text;
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('class', 'chat chat-start');
-        wrapper.appendChild(msg);
-        $('chat').appendChild(wrapper);
-
-        $("assistant-loading").style.visibility = 'hidden';
-    }
-
-    function showError(text) {
-        const msg = document.createElement('div');
-        msg.setAttribute('class', 'chat-bubble chat-bubble-error');
-        msg.innerText = text;
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('class', 'chat chat-end');
-        wrapper.appendChild(msg);
-        $('chat').appendChild(wrapper);
-
-        $("assistant-loading").style.visibility = 'hidden';
-        $('prompt').disabled = false;
-        $('prompt').focus();
-    }
-
     // poor man's coachmarks
-    setTimeout(() => { appendAssistantMessage('Hi, I am your virtual assistant!'); }, 200);
-    setTimeout(() => { appendAssistantMessage('How can I help you?'); }, 300);
-    setTimeout(() => { appendHumanMessage('What is the biggest planet in our solar system?'); }, 500);
-    setTimeout(() => { appendAssistantMessage('Jupiter.'); }, 1100);
+    setTimeout(() => { assistant('Hi, I am your virtual assistant!'); }, 200);
+    setTimeout(() => { assistant('How can I help you?'); }, 300);
+    setTimeout(() => { human('What is the biggest planet in our solar system?'); }, 500);
+    setTimeout(() => { assistant('Jupiter.'); }, 1100);
 });
