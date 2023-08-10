@@ -5,6 +5,9 @@
     "node": ">=18"
   },
   "scripts": {
+    "start": "npm run nbb main.cljs",
+    "nbb": "nbb",
+    "nrepl": "nbb nrepl-server :port 9000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
