@@ -55,9 +55,9 @@
   (.writeHead response 200 #js{:content-type "application/javascript"})
   (.end response (fs/readFileSync "./public/index.js")))
 
-(defn serve-css [response]
+(defn serve-style-css [response]
   (.writeHead response 200 #js{:content-type "text/css"})
-  (.end response (fs/readFileSync "./public/daisyui.css")))
+  (.end response (fs/readFileSync "./public/style.css")))
 
 (defn serve-question [request response]
   (let [parsed-url  (-> request .-url url/parse)
@@ -79,8 +79,8 @@
     (cond
       (= url "/") (serve-index-html response)
       (= url "/index.html") (serve-index-html response)
+      (= url "/style.css") (serve-style-css response)
       (= url "/index.js") (serve-index-js response)
-      (= url "/daisyui.css") (serve-css response)
       (= url "/answer") (serve-answer response)
       (.startsWith url "/question") (serve-question request response)
       :else (serve-404 response))))

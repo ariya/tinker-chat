@@ -1,0 +1,199 @@
+html {
+    line-height: 1.5;
+    background-color: rgb(29, 35, 42);
+    font-family: ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+body {
+    padding: 0 1.2em;
+    color: rgb(166, 173, 186);
+    color-scheme: dark;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+}
+
+input {
+    margin-top: 1rem;
+    width: 100%;
+    height: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    border-width: 1px;
+    border-color: rgb(251, 189, 35);
+    background-color: rgb(29, 35, 42);
+    border-radius: .5rem;
+}
+
+input:focus {
+    outline-color: rgb(251, 189, 35);
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: 2px;
+}
+
+input:disabled,
+input[disabled] {
+    cursor: not-allowed;
+    border-color: rgb(25, 30, 36);
+    background-color: rgb(25, 30, 36);
+}
+
+.speech {
+    display: grid;
+    column-gap: .75rem;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+
+.speech-assistant,
+.speech-loader {
+    place-items: start;
+}
+
+.speech-human,
+.speech-panic {
+    place-items: end;
+}
+
+.speech-bubble-assistant,
+.speech-bubble-human,
+.speech-bubble-panic,
+.speech-bubble-loader {
+    display: block;
+    position: relative;
+    width: fit-content;
+    padding: .5rem 1rem;
+    min-height: 2.5rem;
+    min-width: 2.5rem;
+    border-radius: 1rem;
+    width: fit-content;
+}
+
+.speech-bubble-assistant:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 1em solid transparent;
+    border-right-color: rgb(31, 178, 166);
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -0.5em;
+    margin-left: -1em;
+}
+
+.speech-bubble-human:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 1em solid transparent;
+    border-left-color: rgb(251, 189, 35);
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -0.5em;
+    margin-right: -1em;
+}
+
+.speech-bubble-panic:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 1em solid transparent;
+    border-left-color: rgb(248, 114, 114);
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -0.5em;
+    margin-right: -1em;
+}
+
+.speech-bubble-loader:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 1em solid transparent;
+    border-right-color: rgb(58, 191, 248);
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -0.5em;
+    margin-left: -1em;
+}
+
+.color-assistant {
+    background-color: rgb(31, 178, 166);
+    color: white
+}
+
+.color-human {
+    background-color: rgb(251, 189, 35);
+    color: rgb(56, 40, 0)
+}
+
+.color-panic {
+    background-color: rgb(248, 114, 114);
+    color: rgb(71, 0, 0);
+}
+
+.color-loader {
+    background-color: rgb(58, 191, 248);
+    color: rgb(0, 43, 61);
+}
+
+.loader {
+    width: 2em;
+    aspect-ratio: 2;
+    background:
+        no-repeat linear-gradient(#000 0 0),
+        no-repeat linear-gradient(#000 0 0),
+        no-repeat linear-gradient(#000 0 0);
+    background-size: 20% 50%;
+    animation: load 1s infinite linear;
+}
+
+@keyframes load {
+    0% {
+        background-position: 0% 100%, 50% 100%, 100% 100%
+    }
+
+    20% {
+        background-position: 0% 50%, 50% 100%, 100% 100%
+    }
+
+    40% {
+        background-position: 0% 0%, 50% 50%, 100% 100%
+    }
+
+    60% {
+        background-position: 0% 100%, 50% 0%, 100% 50%
+    }
+
+    80% {
+        background-position: 0% 100%, 50% 100%, 100% 0%
+    }
+
+    100% {
+        background-position: 0% 100%, 50% 100%, 100% 100%
+    }
+}

@@ -1,16 +1,7 @@
 <html>
 
 <head>
-    <link href="daisyui.css" rel="stylesheet" type="text/css" />
-    <style>
-        body {
-            padding: 1em;
-        }
-
-        input {
-            width: 100%;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet" type="text/css" />
     <script src="index.js"></script>
 </head>
 
@@ -18,14 +9,14 @@
     <div id="chat">
     </div>
     <div id="assistant-loading">
-        <div class="chat chat-start">
-            <div class="chat-bubble chat-bubble-info">
-                <span class="loading loading-dots loading-md"></span>
+        <div class="speech speech-loader">
+            <div class="speech-bubble-loader color-loader">
+                <div class="loader"></div>
             </div>
         </div>
     </div>
     <div class="divider"></div>
-    <input type="text" id="prompt" autofocus class="input input-bordered input-accent" />
+    <input type="text" id="prompt" autofocus />
 </body>
 
 </html>

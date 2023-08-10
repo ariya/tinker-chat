@@ -8,29 +8,29 @@ document.addEventListener('DOMContentLoaded', function () {
         return el;
     }
 
-    function msg(side, cls, text) {
-        const el = $div('chat-bubble ' + cls);
+    function msg(side, kind, text) {
+        const el = $div(kind);
         el.innerText = text;
-        const wrapper = $div('chat ' + side);
+        const wrapper = $div('speech ' + side);
         wrapper.appendChild(el);
         $('chat').appendChild(wrapper);
     }
 
     function assistant(text) {
-        msg('chat-start', 'chat-bubble-accent', text);
+        msg('speech-assistant', 'speech-bubble-assistant color-assistant', text);
         $('assistant-loading').style.display = 'none';
         $('prompt').disabled = false;
         $('prompt').focus();
     }
 
     function human(text) {
-        msg('chat-end', 'chat-bubble-warning', text);
+        msg('speech-human', 'speech-bubble-human color-human', text);
         $('assistant-loading').style.display = 'block';
         $('prompt').disabled = true;
     }
 
     function panic(text) {
-        msg('chat-end', 'chat-bubble-error', text);
+        msg('speech-panic', 'speech-bubble-panic color-panic', text);
         $('assistant-loading').style.display = 'none';
         $('prompt').disabled = false;
         $('prompt').focus();
