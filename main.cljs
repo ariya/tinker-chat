@@ -24,9 +24,9 @@
                              {:role "system"
                               :content "Answer in 50 words or less."}
                              {:role "user"
-                              :content "Berapa jumlah penduduk Jakarta?"}
+                              :content "What is the biggest planet in our solar system?"}
                              {:role "assistant"
-                              :content "Sekitar 10 juta jiwa."}]))
+                              :content "Jupiter."}]))
 
 (defn add-message! [role content]
   (swap! llm-messages conj {:role role :content content}))

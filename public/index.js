@@ -81,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // poor man's coachmarks
-    setTimeout(() => { appendAssistantMessage('Halo, saya adalah asisten virtual!'); }, 200);
-    setTimeout(() => { appendAssistantMessage('Ada yang bisa saya bantu?'); }, 300);
-    setTimeout(() => { appendHumanMessage('Berapa jumlah penduduk Jakarta?'); }, 500);
-    setTimeout(() => { appendAssistantMessage('Sekitar 10 juta jiwa.'); }, 1100);
+    setTimeout(() => { appendAssistantMessage('Hi, I am your virtual assistant!'); }, 200);
+    setTimeout(() => { appendAssistantMessage('How can I help you?'); }, 300);
+    setTimeout(() => { appendHumanMessage('What is the biggest planet in our solar system?'); }, 500);
+    setTimeout(() => { appendAssistantMessage('Jupiter.'); }, 1100);
 });
