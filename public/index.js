@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const prompt = el.value.trim();
             el.value = '';
             if (prompt.length > 0) {
+                el.disabled = true;
                 appendHumanMessage(prompt);
                 fetch('/question?' + encodeURIComponent(prompt));
                 setTimeout(getAssistantAnswer, 300);
@@ -26,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (index > assistantIndex) {
                 assistantIndex = index;
                 appendAssistantMessage(answer);
+                $('prompt').disabled = false;
+                $('prompt').focus();
             } else {
                 setTimeout(getAssistantAnswer, 100);
             }
