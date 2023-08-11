@@ -11,8 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (prompt.length > 0) {
                 el.disabled = true;
                 appendHumanMessage(prompt);
-                fetch('/question?' + encodeURIComponent(prompt));
-                setTimeout(getAssistantAnswer, 300);
+                fetch('/question?' + encodeURIComponent(prompt)).catch(error => {
+                    showError(error);
+                }).then(response => {
+                    response && response.ok && setTimeout(getAssistantAnswer, 300);
+                })
             }
         }
     });
@@ -20,9 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // get up-to-date answer
     let assistantIndex = 0;
     function getAssistantAnswer() {
-        fetch('/answer').then(response => {
-            return response.json();
+        fetch('/answer').catch(error => {
+            showError(error);
+        }).then(response => {
+            return response && response.json();
         }).then(data => {
+            if (!data) {
+                return;
+            }
             const { index, answer } = data;
             if (index > assistantIndex) {
                 assistantIndex = index;
@@ -56,6 +64,20 @@ document.addEventListener("DOMContentLoaded", function () {
         $('chat').appendChild(wrapper);
 
         $("assistant-loading").style.visibility = 'hidden';
+    }
+
+    function showError(text) {
+        const msg = document.createElement('div');
+        msg.setAttribute('class', 'chat-bubble chat-bubble-error');
+        msg.innerText = text;
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('class', 'chat chat-end');
+        wrapper.appendChild(msg);
+        $('chat').appendChild(wrapper);
+
+        $("assistant-loading").style.visibility = 'hidden';
+        $('prompt').disabled = false;
+        $('prompt').focus();
     }
 
     // poor man's coachmarks
