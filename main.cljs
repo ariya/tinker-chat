@@ -22,11 +22,7 @@
 (defonce llm-messages (atom [{:role "system"
                               :content "You are a helpful assistant."}
                              {:role "system"
-                              :content "Answer in 50 words or less."}
-                             {:role "user"
-                              :content "What is the biggest planet in our solar system?"}
-                             {:role "assistant"
-                              :content "Jupiter."}]))
+                              :content "Answer in 50 words or less."}]))
 
 (defn add-message! [role content]
   (swap! llm-messages conj {:role role :content content}))

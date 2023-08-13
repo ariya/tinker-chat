@@ -37,18 +37,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // send question to the back-end
+    function ask(question) {
+        human(question);
+        fetch('/question?' + encodeURIComponent(question)).catch(error => {
+            panic(error);
+        }).then(response => {
+            response && response.ok && setTimeout(getAssistantAnswer, 300);
+        })
+    }
+
     $('prompt').addEventListener('keydown', function handleKeyInput(event) {
         if (event.key === 'Enter') {
             const el = $('prompt');
             const prompt = el.value.trim();
-            el.value = '';
             if (prompt.length > 0) {
-                human(prompt);
-                fetch('/question?' + encodeURIComponent(prompt)).catch(error => {
-                    panic(error);
-                }).then(response => {
-                    response && response.ok && setTimeout(getAssistantAnswer, 300);
-                })
+                el.value = '';
+                ask(prompt);
             }
         }
     });
@@ -77,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // poor man's coachmarks
-    setTimeout(() => { assistant('Hi, I am your virtual assistant!'); }, 200);
-    setTimeout(() => { assistant('How can I help you?'); }, 300);
-    setTimeout(() => { human('What is the biggest planet in our solar system?'); }, 500);
-    setTimeout(() => { assistant('Jupiter.'); }, 1100);
+    setTimeout(() => { assistant('Hi, I am your virtual assistant!'); }, 0);
+    setTimeout(() => { assistant('How can I help you?'); }, 100);
+
+    setTimeout(() => { ask('What is the biggest planet in our solar system?'); }, 200);
 });
