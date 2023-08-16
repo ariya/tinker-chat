@@ -1,0 +1,51 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+        - uses: actions/checkout@v3
+
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 18
+            cache: 'npm'
+        - uses: actions/setup-python@v4
+          with:
+            python-version: '3.11'
+            cache: 'pip'
+
+        - name: Cache gpt4all models
+          uses: actions/cache@v3
+          with:
+            path: ~/.cache/gpt4all
+            key:  ${{ runner.os }}-gpt4all
+
+        - name: Setup models via gpt4all
+          run: |
+            pip install llm
+            llm --version
+            llm install llm-gpt4all
+
+        - run: llm -m orca-mini-3b "The biggest planet in our solar system is"
+
+        - name: Download and run localai
+          run: |
+            curl -OL https://github.com/go-skynet/LocalAI/releases/download/v1.24.1/local-ai-avx2-Linux-x86_64
+            file ./local-ai-avx2-Linux-x86_64
+            chmod +x ./local-ai-avx2-Linux-x86_64
+            ./local-ai-avx2-Linux-x86_64 --threads 2 --models-path ~/.cache/gpt4all/ &
+            sleep 5
+
+        - name: Check the available models
+          run: curl --silent localhost:8080/v1/models | jq
+
+        - run: npm ci
+
+        - run: npm start "Indonesia declared its independence on"
+          timeout-minutes: 7
+          env:
+            OPENAI_API_BASE: "http://127.0.0.1:8080"
+            CHAT_MODEL: "orca-mini-3b.ggmlv3.q4_0.bin"

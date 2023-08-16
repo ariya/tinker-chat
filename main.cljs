@@ -93,10 +93,12 @@
 (def cli-args
   (not-empty (js->clj (.slice js/process.argv 3))))
 
-(defn main [_]
+(defn main [args]
   (if (and (> (.indexOf API_BASE "openai") 0) (empty? API_KEY))
     (js/console.error "No API key, please set OPENAPI_API_KEY!")
-    (start-server 5000)))
+    (if (pos? (count args))
+      (llm-ask (first args))
+      (start-server 5000))))
 
 (main cli-args)
 
