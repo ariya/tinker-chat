@@ -95,7 +95,7 @@
 
 (defn main [args]
   (if (and (> (.indexOf API_BASE "openai") 0) (empty? API_KEY))
-    (js/console.error "No API key, please set OPENAPI_API_KEY!")
+    (js/console.error "No API key, please set OPENAI_API_KEY!")
     (if (pos? (count args))
       (llm-ask (first args))
       (start-server 5000))))
