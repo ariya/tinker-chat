@@ -8,29 +8,29 @@ document.addEventListener('DOMContentLoaded', function () {
         return el;
     }
 
-    function msg(side, kind, text) {
-        const el = $div(kind);
+    function msg(type, text) {
+        const el = $div(`speech-bubble-${type} color-${type}`);
         el.innerText = text;
-        const wrapper = $div('speech ' + side);
+        const wrapper = $div(`speech speech-${type}`);
         wrapper.appendChild(el);
         $('chat').appendChild(wrapper);
     }
 
     function assistant(text) {
-        msg('speech-assistant', 'speech-bubble-assistant color-assistant', text);
+        msg('assistant', text);
         $('assistant-loading').style.display = 'none';
         $('prompt').disabled = false;
         $('prompt').focus();
     }
 
     function human(text) {
-        msg('speech-human', 'speech-bubble-human color-human', text);
+        msg('human', text);
         $('assistant-loading').style.display = 'block';
         $('prompt').disabled = true;
     }
 
     function panic(text) {
-        msg('speech-panic', 'speech-bubble-panic color-panic', text);
+        msg('panic', text);
         $('assistant-loading').style.display = 'none';
         $('prompt').disabled = false;
         $('prompt').focus();
