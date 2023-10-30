@@ -33,7 +33,7 @@ jobs:
 
         - name: Download and run localai
           run: |
-            curl -OL https://github.com/go-skynet/LocalAI/releases/download/v1.24.1/local-ai-avx2-Linux-x86_64
+            curl -OL https://github.com/mudler/LocalAI/releases/download/v1.40.0/local-ai-avx2-Linux-x86_64
             file ./local-ai-avx2-Linux-x86_64
             chmod +x ./local-ai-avx2-Linux-x86_64
             ./local-ai-avx2-Linux-x86_64 --threads 2 --models-path ~/.cache/gpt4all/ &
