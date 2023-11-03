@@ -13,13 +13,13 @@ To use GPT from OpenAI, set the environment variable `OPENAI_API_KEY` to your [A
 To use a local LLM, first you need an OpenAI-compatible server:
 
 1. Install [LocalAI](https://localai.io/).
-2. Download a compatible model, e.g. [Llama-2-13B-Chat-GGML](https://huggingface.co/TheBloke/Llama-2-13B-Chat-GGML).
+2. Download a compatible model, e.g. [Mistral 7B Instruct](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF).
 3. Place the model in the LocalAI's `models` directory.
 4. Run LocalAI.
 
 Before launching the demo, set these environment variables:
 ```
-export CHAT_MODEL='llama-2-13b-chat.ggmlv3.q4_0.bin'
+export CHAT_MODEL='mistral-7b-instruct-v0.1.Q4_K_M.gguf'
 export OPENAI_API_BASE='http://127.0.0.1:8080'
 ```
 
