@@ -14,25 +14,19 @@ jobs:
             node-version: 18
             cache: 'npm'
 
-        - name: Download LocalAI
+        - name: Get and build llama.cpp
           run: |
-            curl -OL https://github.com/mudler/LocalAI/releases/download/v1.40.0/local-ai-avx2-Linux-x86_64
-            file ./local-ai-avx2-Linux-x86_64
-            chmod +x ./local-ai-avx2-Linux-x86_64
+            git clone https://github.com/ggerganov/llama.cpp.git
+            cd llama.cpp && make
 
-        - name: Download Orca Mini 3B model
-          run: |
-            curl -OL https://huggingface.co/juanjgit/orca_mini_3B-GGUF/resolve/main/orca-mini-3b.q4_0.gguf
-            mkdir models
-            mv ./orca-mini-3b.q4_0.gguf ./models/
+        - name: Download MiniChat 1.5 3B model
+          run: curl -OL https://huggingface.co/afrideva/MiniChat-1.5-3B-GGUF/resolve/main/minichat-1.5-3b.q5_k_m.gguf
 
-        - name: Run LocalAI with Orca Mini 3B
-          run: |
-            ./local-ai-avx2-Linux-x86_64 --threads 2 &
-            sleep 5
+        - name: Run llama.cpp with MiniChat
+          run: ./llama.cpp/server --host 0.0.0.0 -m ./minichat-1.5-3b.q5_k_m.gguf &
 
         - name: Check the available models
-          run: curl --silent localhost:8080/v1/models | jq
+          run: sleep 5 && curl --silent localhost:8080/v1/models | jq
 
         - run: npm ci
 
@@ -40,4 +34,3 @@ jobs:
           timeout-minutes: 7
           env:
             OPENAI_API_BASE: "http://127.0.0.1:8080"
-            CHAT_MODEL: "orca-mini-3b.q4_0.gguf"
