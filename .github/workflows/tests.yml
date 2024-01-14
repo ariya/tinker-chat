@@ -14,24 +14,28 @@ jobs:
             node-version: 18
             cache: 'npm'
 
-        - name: Get and build llama.cpp
-          run: |
-            git clone https://github.com/ggerganov/llama.cpp.git
-            cd llama.cpp && make
+        - name: Download Mistral 7B model
+          run: curl -OL https://huggingface.co/TheBloke/Mistral-7B-OpenOrca-GGUF/resolve/main/mistral-7b-openorca.Q3_K_M.gguf
 
-        - name: Download Phi 2 model
-          run: curl -OL https://huggingface.co/TheBloke/dolphin-2_6-phi-2-GGUF/resolve/main/dolphin-2_6-phi-2.Q4_0.gguf
+        - name: Install Nitro
+          run: npm install @janhq/nitro
 
-        - name: Run llama.cpp with Phi 2
-          run: ./llama.cpp/server --host 0.0.0.0 -m ./dolphin-2_6-phi-2.Q4_0.gguf &
+        - name: Launch Nitro
+          run: ./node_modules/@janhq/nitro/nitro &
 
-        - name: Wait until the API server is ready
-          run: while ! curl -s 'http://localhost:8080/health' | grep 'ok'; do sleep 1; done
+        - name: Wait until Nitro is ready
+          run: while ! curl -s 'http://localhost:3928/healthz' | grep 'alive'; do sleep 1; done
           timeout-minutes: 3
+
+        - name: Load Mistral 7B into Nitro
+          run: |
+            curl http://localhost:3928/inferences/llamacpp/loadmodel \
+              -H 'Content-Type: application/json' \
+              -d '{"llama_model_path": "./mistral-7b-openorca.Q3_K_M.gguf"}'
 
         - run: npm ci
 
-        - run: npm start "When did Indonesia declare its independence?" | grep 'August 17'
+        - run: npm start "Which planet in our solar system is the largest?" | grep Jupiter
           timeout-minutes: 7
           env:
-            OPENAI_API_BASE: "http://127.0.0.1:8080"
+            OPENAI_API_BASE: "http://127.0.0.1:3928"
