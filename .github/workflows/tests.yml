@@ -19,18 +19,19 @@ jobs:
             git clone https://github.com/ggerganov/llama.cpp.git
             cd llama.cpp && make
 
-        - name: Download MiniChat 1.5 3B model
-          run: curl -OL https://huggingface.co/afrideva/MiniChat-1.5-3B-GGUF/resolve/main/minichat-1.5-3b.q5_k_m.gguf
+        - name: Download Phi 2 model
+          run: curl -OL https://huggingface.co/TheBloke/dolphin-2_6-phi-2-GGUF/resolve/main/dolphin-2_6-phi-2.Q4_0.gguf
 
-        - name: Run llama.cpp with MiniChat
-          run: ./llama.cpp/server --host 0.0.0.0 -m ./minichat-1.5-3b.q5_k_m.gguf &
+        - name: Run llama.cpp with Phi 2
+          run: ./llama.cpp/server --host 0.0.0.0 -m ./dolphin-2_6-phi-2.Q4_0.gguf &
 
-        - name: Check the available models
-          run: sleep 5 && curl --silent localhost:8080/v1/models | jq
+        - name: Wait until the API server is ready
+          run: while ! curl -s 'http://localhost:8080/health' | grep 'ok'; do sleep 1; done
+          timeout-minutes: 3
 
         - run: npm ci
 
-        - run: npm start "Indonesia declared its independence on"
+        - run: npm start "When did Indonesia declare its independence?" | grep 'August 17'
           timeout-minutes: 7
           env:
             OPENAI_API_BASE: "http://127.0.0.1:8080"

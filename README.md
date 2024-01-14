@@ -10,10 +10,10 @@ To use GPT from OpenAI, set the environment variable `OPENAI_API_KEY` to your [A
 
 ### Local LLM
 
-To use a local LLM, first obtain and build [llama.cpp](https://github.com/ggerganov/llama.cpp) (this process typically takes only 5 minutes). And then, download a compatible model, such as [Mistral 7B Instruct](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF). Run llama.cpp's inference server with the downloaded model, e.g.:
+To use a local LLM, first obtain and build [llama.cpp](https://github.com/ggerganov/llama.cpp) (this process typically takes only 5 minutes). And then, download a compatible model, such as [Dolphin 2.6 variant of Phi 2](https://huggingface.co/TheBloke/dolphin-2_6-phi-2-GGUF). Run llama.cpp's inference server with the downloaded model, e.g.:
 
-```bash
-./server -m /path/to/mistral-7b-instruct-v0.1.Q4_K_M.gguf
+```
+./server -m /path/to/dolphin-2_6-phi-2.Q4_K_M.gguf
 ```
 
 Before launching the demo, ensure that `OPENAI_API_BASE` is set to `http://127.0.0.1:8080`,
