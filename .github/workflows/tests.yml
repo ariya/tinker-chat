@@ -7,37 +7,22 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
-        - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-        - uses: actions/setup-node@v3
-          with:
-            node-version: 18
-            cache: 'npm'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
 
-        - name: Download Phi 2 model
-          run: curl -OL https://huggingface.co/TheBloke/dolphin-2_6-phi-2-GGUF/resolve/main/dolphin-2_6-phi-2.Q3_K_M.gguf
+      - name: Prepare LLM (Phi-3 Mini)
+        uses: ./.github/actions/prepare-llm
+        timeout-minutes: 3
 
-        - name: Download and unpack Nitro
-          run: |
-            curl -OL https://github.com/janhq/nitro/releases/download/v0.2.9/nitro-0.2.9-linux-amd64.tar.gz
-            tar zxvf nitro-0.2.9-linux-amd64.tar.gz
+      - run: npm ci
 
-        - name: Launch Nitro
-          run: ./nitro/nitro &
+      - run: npm start 'Which planet in our solar system is the largest?' | tee output.txt
+        timeout-minutes: 7
+        env:
+          OPENAI_API_BASE: "http://127.0.0.1:8080"
 
-        - name: Wait until Nitro is ready
-          run: while ! curl -s 'http://localhost:3928/healthz' | grep 'alive'; do sleep 1; done
-          timeout-minutes: 3
-
-        - name: Load Phi 2 into Nitro
-          run: |
-            curl http://localhost:3928/inferences/llamacpp/loadmodel \
-              -H 'Content-Type: application/json' \
-              -d '{"llama_model_path": "./dolphin-2_6-phi-2.Q3_K_M.gguf"}'
-
-        - run: npm ci
-
-        - run: npm start "Which planet in our solar system is the largest?" | grep Jupiter
-          timeout-minutes: 7
-          env:
-            OPENAI_API_BASE: "http://127.0.0.1:3928"
+      - run: grep -i jupiter output.txt
