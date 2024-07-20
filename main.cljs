@@ -7,7 +7,7 @@
 
 (def API_KEY js/process.env.OPENAI_API_KEY)
 
-(def CHAT_MODEL (or js/process.env.CHAT_MODEL "gpt-3.5-turbo"))
+(def CHAT_MODEL (or js/process.env.CHAT_MODEL "gpt-4o-mini"))
 
 (defn http-post [url bearer payload]
   (js/fetch url (clj->js {:method "POST"
